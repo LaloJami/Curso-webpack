@@ -92,3 +92,28 @@ npx webpack --mode production
 npx webpack --mode development
 ```
 La diferencia radica que el modo development deja el código mas legible para los desarrolladores pero con comentarios, el modo production deja el código comprimido y mas limpio para usarse.
+
+# Instalación de webpack y construcción del proyecto
+Entendimos las bases de webpack pero ahora vamos a crear un proyecto que nos va a permitir trabajar con todas las particularidades que nos brinda webpack y preprarlo para mandarlo a produccion
+
+* CSS
+* Imágenes
+* fonts
+* optimización de código
+
+El proyecto que realizaremos será un pequeño portafolio en el que podremos ver nuestra foto y nuestro nombre y redes sociales.
+
+## Pasos de la clase
+Clonar el proyecto
+```
+git clone https://github.com/gndx/js-portfolio.git
+```
+Instalar webpack
+con npm
+```
+npm install webpack webpack-cli -D 
+```
+con Yarn
+```
+yarn add webpack webpack-cli -D 
+```
