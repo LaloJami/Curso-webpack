@@ -221,7 +221,7 @@ yarn
 yarn add html-webpack-plugin -D
 ```
 Al webpack config queda asi
-```
+```js
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -279,7 +279,7 @@ yarn add mini-css-extract-plugin css-loader -D
 * css-loader ⇒ Loader para reconocer CSS
 * mini-css-extract-plugin ⇒ Extrae el CSS en archivos
 * Para comenzar debemos agregar las configuraciones de webpack
-```
+```js
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
@@ -323,7 +323,7 @@ yarn add copy-webpack-plugin -D
 Para poder comenzar a usarlo debemos agregar estas configuraciones a ``webpack.config.js``
 
 const CopyPlugin = require('copy-webpack-plugin');
-```
+```js
 module.exports = {
 	...
   plugins: [
