@@ -341,3 +341,91 @@ module.exports = {
 Es importante las propiedades from y to
 * From ⇒ que recurso (archivo o directorio) deseamos copiar al directorio final
 * To ⇒ en que ruta dentro de la carpeta final terminara los recursos
+
+# Loaders de imágenes
+Puedes usar una forma de importar las imágenes haciendo un import de las mismas y generando una variable
+
+No es necesario instalar ninguna dependencia, webpack ya lo tiene incluido debemos agregar la siguiente configuración
+```js
+module.exports = {
+	...
+  module: {
+    rules: [
+      {
+        test: /\.png/,
+        type: "asset/resource"
+      }
+    ]
+  },
+}
+```
+Para empezar a usar esta configuración debemos importar la imagen de la siguiente forma
+```js
+import github from '../assets/images/github.png';
+```
+Para incluirlo en el HTML debes hacer lo siguiente
+```js
+// Ejemplo en Vanilla JS
+const imagen = `<img src=`${github}` />`;
+```
+```
+// Ejemplo en React
+<img src={`${github}`} />
+```
+# Loaders de fuentes
+Cuando utilizamos fuentes externas una buena práctica es descargarlas a nuestro proyecto
+* Debido a que no hara un llamado a otros sitios
+
+Por ello es importante usarlo dentro de webpack
+Para esta tarea instalaras y usaras “file-loader” y “url-loader”
+
+instalación con NPM
+```
+npm install url-loader file-loader -D
+```
+instalación con YARN
+```
+yarn add url-loader file-loader -D
+```
+Para aplicar esta configuración debes agregar la siguiente información
+```js
+module.exports = {
+	...
+  module: {
+    rules: [
+			...
+      {
+        test: /\.(woff|woff2)$/,
+        use: {
+          loader: "url-loader",
+          options: {
+            // limit => limite de tamaño
+            limit: 10000,
+            // Mimetype => tipo de dato
+            mimetype: "application/font-woff",
+            // name => nombre de salida
+            name: "[name].[ext]",
+            // outputPath => donde se va a guardar en la carpeta final
+            outputPath: "./assets/fonts/",
+            publicPath: "./assets/fonts/",
+            esModule: false,
+          }
+        }
+      }
+    ]
+  },
+	...
+}
+```
+Es importante que dentro de los estilos agregues @font-face
+```css
+@font-face {
+	font-family: "Ubuntu";
+	src: url("../assets/fonts/ubuntu-regular.woff2") format('woff2'),
+			 url("../assets/fonts/ubuntu-regular.woff") format('woff');
+	font-weight: 400;
+	font-style: normal;
+}
+```
+> una pagina para descargar las fuentes http://google-webfonts-helper.herokuapp.com/fonts/ubuntu?subsets=cyrillic,latin
+
