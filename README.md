@@ -207,3 +207,137 @@ module: {
   }
 }
 ```
+# HTML en webpack
+## HtmlWebpackPlugin
+Es un plugin para inyectar javascript, css, favicons, y nos facilita la tarea de enlazar los bundles a nuestro template HTML.
+
+Instalación
+npm
+```
+npm i html-webpack-plugin -D
+```
+yarn
+```
+yarn add html-webpack-plugin -D
+```
+Al webpack config queda asi
+```
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+
+module.exports = {
+    mode: 'production', // LE INDICO EL MODO EXPLICITAMENTE
+    entry: './src/index.js', // el punto de entrada de mi aplicación
+    output: { // Esta es la salida de mi bundle
+        path: path.resolve(__dirname, 'dist'),
+        // resolve lo que hace es darnos la ruta absoluta de el S.O hasta nuestro archivo
+        // para no tener conflictos entre Linux, Windows, etc
+        filename: 'main.js', 
+        // EL NOMBRE DEL ARCHIVO FINAL,
+    },
+    resolve: {
+        extensions: ['.js'] // LOS ARCHIVOS QUE WEBPACK VA A LEER
+    },
+    module: {
+        // REGLAS PARA TRABAJAR CON WEBPACK
+        rules : [
+            {
+                test: /\.m?js$/, // LEE LOS ARCHIVOS CON EXTENSION .JS,
+                exclude: /node_modules/, // IGNORA LOS MODULOS DE LA CARPETA
+                use: {
+                    loader: 'babel-loader'
+                }
+            }
+        ]
+    },
+    // SECCION DE PLUGINS
+    plugins: [
+        new HtmlWebpackPlugin({ // CONFIGURACIÓN DEL PLUGIN
+            inject: true, // INYECTA EL BUNDLE AL TEMPLATE HTML
+            template: './public/index.html', // LA RUTA AL TEMPLATE HTML
+            filename: './index.html' // NOMBRE FINAL DEL ARCHIVO
+        })
+    ]
+}
+```
+# Loaders para CSS y preprocesadores de CSS
+Puedes dar soporte a CSS en webpack mediante loaders y plugins, además que puedes dar superpoderes al mismo con las nuevas herramientas conocidas como pre procesadores y post procesadores
+
+Un preprocesador CSS es un programa que te permite generar CSS a partir de la syntax única del preprocesador. Existen varios preprocesadores CSS de los cuales escoger, sin embargo, la mayoría de preprocesadores CSS añadirán algunas características que no existen en CSS puro, como variable, mixins, selectores anidados, entre otros. Estas características hacen la estructura de CSS más legible y fácil de mantener.
+
+post procesadores son herramientas que procesan el CSS y lo transforman en una nueva hoja de CSS que le permiten optimizar y automatizar los estilos para los navegadores actuales.
+
+Para dar soporte a CSS en webpack debes instalar los siguientes paquetes
+Con npm
+```
+npm i mini-css-extract-plugin css-loader -D
+```
+Con yarn
+```
+yarn add mini-css-extract-plugin css-loader -D
+```
+* css-loader ⇒ Loader para reconocer CSS
+* mini-css-extract-plugin ⇒ Extrae el CSS en archivos
+* Para comenzar debemos agregar las configuraciones de webpack
+```
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+module.exports = {
+	...,
+	module: {
+    rules: [
+      {
+        test: /\.(css|styl)$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader",
+        ]
+      }
+    ]
+  },
+  plugins: [
+		...
+    new MiniCssExtractPlugin(),
+  ]
+}
+```
+Si deseamos posteriormente podemos agregar herramientas poderosas de CSS como ser:
+* pre procesadores
+    * Sass
+    * Less
+    * Stylus
+* post procesadores
+    * Post CSS
+
+# Copia de archivos con Webpack
+Si tienes la necesidad de mover un archivo o directorio a tu proyecto final podemos usar un plugin llamado “copy-webpack-plugin”
+Para instalarlo debemos ejecutar el comando
+Para npm
+```
+npm i copy-webpack-plugin -D
+```
+Para yarn
+```
+yarn add copy-webpack-plugin -D
+```
+Para poder comenzar a usarlo debemos agregar estas configuraciones a ``webpack.config.js``
+
+const CopyPlugin = require('copy-webpack-plugin');
+```
+module.exports = {
+	...
+  plugins: [
+    new CopyPlugin({
+      patterns: [
+        {
+          from: path.resolve(__dirname, "src", "assets/images"),
+          to: "assets/images"
+        }
+      ]
+    }),
+  ]
+}
+```
+Es importante las propiedades from y to
+* From ⇒ que recurso (archivo o directorio) deseamos copiar al directorio final
+* To ⇒ en que ruta dentro de la carpeta final terminara los recursos
