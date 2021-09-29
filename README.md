@@ -744,3 +744,63 @@ npm init -y
 # instalar dependencias
 npm install react react-dom -s
 ```
+# Configuración de Webpack 5 para React.js
+.
+Añadiremos webpack para poder preparar el proyecto y mandarlo a prod.
+
+Vamos a repetir muchos de los pasos que hicimos anteriormente:
+
+Instalaremos las dependencias:
+```
+npm install @babel/core @babel/preset-env @babel/preset-react babel-loader -D
+```
+Vamos a ir creando nuestros recursos: configuraciones:
+```js
+//Creamos .babelrc y añadimos la estructura
+{ //Para poder compilar
+    "presets": [
+        "@babel/preset-env",
+        "@babel/preset-react"
+    ]
+}
+```
+Instalamos webpack para el proyecto con:
+```
+npm install webpack webpack-cli webpack-dev-server -D
+```
+Creamos el archivo de configuración y añadimos las configuraciones correspondientes:
+```
+const path = require("path");
+
+module.exports = {
+  entry: "./src/index.js",
+  output: {
+    path: path.resolve(__dirname, "dist"),
+    filename: "bundle.js",
+  },
+
+  resolve: {
+    //Extensiones que vamos a trabajar
+    extensions: [".js", ".jsx"],
+  },
+
+  module: {
+    //Reglas
+    rules: [
+      {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
+      },
+    ],
+  },
+
+  devServer: {
+    contentBase: path.join(__dirname, "dist"),
+    compress: true,
+    port: 3006,
+  },
+};
+```
