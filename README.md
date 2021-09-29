@@ -804,3 +804,30 @@ module.exports = {
   },
 };
 ```
+# configuracion de plugins y loaders para react
+## NPM
+```
+npm install -D html-loader html-webpack-plugin
+```
+## YARN
+```
+yarn add -D html-loader html-webpack-plugin
+```
+# Configuración de Webpack para CSS en React
+Instalación de dependencias
+## NPM
+```
+npm install -D mini-css-extract-plugin css-loader style-loader sass sass-loader
+```
+## YARN
+```
+yarn add -D mini-css-extract-plugin css-loader style-loader sass sass-loader
+```
+## NPM
+```
+npm install -D css-minimizer-webpack-plugin terser-webpack-plugin clean-webpack-plugin
+```
+## YARN
+```
+yarn add -D css-minimizer-webpack-plugin terser-webpack-plugin clean-webpack-plugin
+```
