@@ -390,6 +390,11 @@ yarn add url-loader file-loader -D
 Para aplicar esta configuración debes agregar la siguiente información
 ```js
 module.exports = {
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'main.js',
+    assetModuleFilename: 'assets/images/[hash][ext][query]'
+  },
 	...
   module: {
     rules: [
@@ -429,3 +434,98 @@ Es importante que dentro de los estilos agregues @font-face
 ```
 > una pagina para descargar las fuentes http://google-webfonts-helper.herokuapp.com/fonts/ubuntu?subsets=cyrillic,latin
 
+
+# Optimización: hashes, compresión y minificación de archivos
+Unos de las razones por que utilizamos webpack es porque nos permite optimizar y comprimir nuestro proyecto
+Debes utilizar los siguientes paquetes
+* **css-minimizer-webpack-plugin** ⇒ Nos ayuda a comprimir nuestros archivos finales CSS
+* **terser-webpack-plugin** ⇒ Permite minificar de una mejor forma
+Instalación
+NPM
+```npm i css-minimizer-webpack-plugin terser-webpack-plugin -D
+```
+YARN
+```
+yarn add css-minimizer-webpack-plugin terser-webpack-plugin -D
+```
+Una vez instalado el plugin debemos agregar la siguiente configuración
+```
+...
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+
+module.exports = {
+	...
+	optimization: {
+    minimize: true,
+    minimizer: [
+      new CssMinimizerPlugin(),
+      new TerserPlugin()
+    ]
+  }
+}
+```
+Cuando nombremos en la configuración de webpack es importante usar `[contenthash]` para evitar problemas con la cache
+
+## ¿Por qué es importante usar Hashes en nuestros archivos?
+Los recursos que se guardan en memoria cache suceden cuando el navegador entra a un sitio por primera vez detecta los recursos y los guarda. Por ello la siguiente vez sera mucho más rápido porque estarán en memoria
+* La desventaja esta cuando sacamos una nueva versión, porque tendrán un mismo nombre evitando que se descargue los nuevos cambios, por lo tanto, el usuario no recibirá los nuevos cambios
+* Para que no haya conflictos con la cache una vez que tengamos nuestro proyecto en producción es importante darles un hash para cada nueva versión
+
+# Webpack Alias
+
+Alias ⇒ nos permiten otorgar nombres paths específicos evitando los paths largos
+
+Para crear un alias debes agregar la siguiente configuración a webpack
+```js
+module.exports = {
+	...
+	resolve: {
+		...
+    alias: {
+      '@nombreDeAlias': path.resolve(__dirname, 'src/<directorio>'),
+    },
+	}
+}
+```
+Puedes usarlo en los imports de la siguiente manera
+```js
+import modulo from "@ejemplo/archivo.js";
+```
+# Variables de entorno
+Es importante considerar las variables de entorno va a ser un espacio seguro donde podemos guardar datos sensibles
+* Por ejemplo, subir llaves al repositorio no es buena idea cuando tienes un proyecto open source
+
+Para instalar debemos correr el comando
+NPM
+```
+npm install -D dotenv-webpack
+```
+YARN
+```
+yarn add -D dotenv-webpack
+```
+Posteriormente debemos crear un archivo `.env` donde estarán la clave para acceder a la misma y el valor que contendrán
+```
+# Ejemplo
+API=https://randomuser.me/api/
+```
+Es buena idea tener un archivo de ejemplo donde, el mismo si se pueda subir al repositorio como muestra de que campos van a ir
+
+Una vez creado el archivo `.env` debemos agregar la siguiente configuración en `webpack.config.js`
+```js
+...
+const Dotenv = require('dotenv-webpack');
+module.exports = {
+	...
+	plugins: [
+		new Dotenv()
+  ],
+}
+```
+**dotenv-webpack** ⇒ Leera el archivo `.env` por defecto y lo agregar a nuestro proyecto
+Para usarlas debes hacer lo siguiente
+```js
+const nombre = process.env.NOMBRE_VARIABLE;
+```
+Toda la configuración se podrá acceder desde `process.env`
