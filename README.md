@@ -590,3 +590,157 @@ module.exports = {
 	]
 }
 ```
+# Webpack Watch
+El modo watch hace que nuestro proyecto se compile de forma automática
+* Es decir que está atento a cambios
+
+Para habilitarlo debemos agregar lo siguiente en la configuración de webpack
+```
+module.exports = {
+	...
+	watch: true
+}
+```
+Cada vez que haya un cambio hara un build automático
+Otra manera es mandar la opción mediante parámetros de consola en package.json
+```
+{
+	"scripts": {
+		"dev:watch": "webpack --config webpack.config.dev.js --watch"
+	}
+}
+```
+Vale la pena recordar que si aplicamos en modo producción se tomara más tiempo porque se optimizaran los recursos
+* Por ello en modo desarrollo se salta ese paso y es más rápido la compilación
+
+# Deploy a Netlify
+creamos un archivo netlify.toml
+.
+y dentro de el creamos una configuracion
+```
+[build]
+
+  publis = "dist"
+  command = "npm run build"
+```
+.
+despues vamos a crear un script que nos ayudara a crear las variables de entorno en nuestro servidor
+.
+primero creamos una carpeta que se llame scripts
+y un archivo que se llamara create-env.js
+y dentro de el colocamos el siguiente codigo
+.
+
+```js
+const fs = require('fs');
+
+	fs.writeFileSync('./.env',`API=${process.env.API}\n`)
+```
+despues vamos a la pagina de netlify a la seccion de build & deploy
+.
+vamos a la sección que dice enviroment, y le damos en edit variables, y alli colocamos las variables que en este caso solo es la variable API y con su valor que es https://randomuser.me/api/
+
+# Webpack dev server
+HTML5 History API permite la manipulación de session history del navegador, es decir las páginas visitadas en el tab o el frame en la cual la página está cargada.
+
+**Recursos**
+How To Optimize Your Site With GZIP Compression
+
+**Apuntes**
+Cuando trabajamos con webpack deseamos ver los cambios en tiempo real en un navegador
+Para tener esta característica esta webpack-dev-server
+Para ello debemos instalarlo
+NPM
+```
+npm install -D webpack-dev-server
+```
+Yarn
+```
+yarn add -D webpack-dev-server
+```
+Posteriormente debemos agregar la siguiente configuración en webpack.config.dev.js
+* Lo hacemos en la configuración de desarrollo debido a que esta característica solo nos ayudara a ver cambios al momento de desarrollar la aplicación
+```js
+module.exports = {
+	...
+	devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true,
+    historyApiFallback: true,
+    port: 3000,
+  }
+}
+```
+En la configuración podemos observar lass siguientes propiedades
+* **contentBase** ⇒ Le dice al servidor donde tiene que servir el contenido, solo es necesario si quieres servir archivos estáticos
+* **compress** ⇒ Habilita la compresión gzip
+* **historyApiFallback** ⇒ cuando estas usando HTML5 History API la página `index.html` sera mostrada en vez de una respuesta 404
+* **Port** ⇒ es el puerto donde vamos a realizar las peticiones
+
+Para comenzar a utilizarlo debes agregar el siguiente script a package.json
+```js
+{
+	...
+	"scripts": {
+	...
+	"start": "webpack serve --config webpack.config.dev.js"
+	}
+}
+```
+# Webpack Bundle Analyzer
+
+Cuando tenemos un proyecto es buena idea poder revisar su impacto en tamaño por ese motivo webpack nos ofrece un paquete para poder verificar y analizar el tamaño del bundle final
+Para instalar corremos el comando
+NPM
+```
+npm install -D webpack-bundle-analyzer
+```
+YARN
+```
+yarn add -D webpack-bundle-analyzer
+```
+Si deseamos hacer un análisis debemos correr los siguientes comandos
+```
+npx webpack --profile --json > stats.json
+npx webpack-bundle-analyzer stats.json
+```
+
+Probando un poco, actualmente implementar en el código el paquete no es necesario, ya que en la clase lo hacemos manualmente con los comandos, pero si deseamos automatizarlo podemos crear el siguiente script
+
+Creamos el script en package.json de analyze
+```js
+{
+	...
+	"scripts": {
+		"build:analyze": "webpack --mode production --config webpack.config.js --analyze",
+	}
+}
+```
+El flag --analyze le dice al paquete webpack-bundle-analyzer que haga esa tarea sobre el bundle de producción
+
+Si deseas hacer la implementación mediante el código, y tener más control sobre este aspecto, en la documentación de NPM nos comenta que podemos personalizar
+# Webpack DevTools
+**Ideas/conceptos claves**
+**source map** es un mapeo que se realiza entre el código original y el código transformado, tanto para archivos JavaScript como para archivos CSS. De esta forma podremos debuggear tranquilamente nuestro código.
+
+
+Con las devtools de webpack te permite crear un mapa de tu proyecto y con el podemos
+* Leer a detalle
+* Analizar particularidades de lo que está compilando nuestro proyecto
+
+Para comenzar debemos ir a `webpack.config.js` y agregar la propiedad `devtool: "source-map"`
+* Esta opción genera un source map el cual posteriormente chrome lo lee y te permite depurar de una mejor forma
+
+# Instalación y configuración de React
+```
+# Descargar el repositorio de Github
+git clone git@github.com:platzi/curso-webpack-react.git
+# Movernos a la carpeta
+cd curso-webpack-react
+# Abrir VS Code
+code .
+# Inicializar npm
+npm init -y
+# instalar dependencias
+npm install react react-dom
+```
