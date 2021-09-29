@@ -742,5 +742,5 @@ code .
 # Inicializar npm
 npm init -y
 # instalar dependencias
-npm install react react-dom
+npm install react react-dom -s
 ```

@@ -1,7 +1,5 @@
-import sum from './utils/sum.js';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './components/App';
 
-const hello = "hello";
-
-console.log(hello);
-
-console.log(sum(2,2));
+ReactDOM.render(<App />, document.getElementById('app'));
